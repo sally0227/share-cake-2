@@ -1,0 +1,111 @@
+import React from 'react';
+import { CakeShape } from '../types';
+import { IconCircle, IconSquare, IconMinus, IconPlus, IconChef } from './Icon';
+
+interface ControlsProps {
+  shape: CakeShape;
+  setShape: (s: CakeShape) => void;
+  slices: number;
+  setSlices: (n: number) => void;
+}
+
+const Controls: React.FC<ControlsProps> = ({ shape, setShape, slices, setSlices }) => {
+  
+  const handleIncrement = () => {
+    if (slices < 64) setSlices(slices + 1);
+  };
+
+  const handleDecrement = () => {
+    if (slices > 1) setSlices(slices - 1);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value);
+    if (isNaN(val)) {
+      setSlices(0); // Allow clearing input to type new number
+    } else {
+      // Clamp between 0 and 64 for safety during typing, allow 0 temporarily
+      setSlices(Math.min(64, Math.max(0, val)));
+    }
+  };
+
+  const handleBlur = () => {
+    // Enforce minimum of 1 when focus is lost
+    if (slices < 1) setSlices(1);
+  };
+
+  return (
+    <div className="absolute bottom-0 left-0 right-0 p-6 z-20 flex flex-col items-center gap-4">
+      
+      {/* Floating Control Card */}
+      <div className="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-5 w-full max-w-sm border border-white/50">
+        
+        {/* Header */}
+        <div className="flex items-center justify-center gap-2 mb-6 text-amber-600">
+          <IconChef className="w-5 h-5" />
+          <h1 className="font-bold text-lg tracking-wide uppercase">切蛋糕神器</h1>
+        </div>
+
+        {/* Shape Toggle */}
+        <div className="flex bg-stone-200 rounded-full p-1 mb-6 relative">
+          <div 
+             className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full shadow-sm transition-all duration-300 ease-out ${shape === CakeShape.ROUND ? 'left-1' : 'left-[calc(50%+0px)]'}`}
+          ></div>
+          <button 
+            onClick={() => setShape(CakeShape.ROUND)}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full relative z-10 transition-colors ${shape === CakeShape.ROUND ? 'text-amber-600 font-bold' : 'text-stone-500'}`}
+          >
+            <IconCircle className="w-4 h-4" />
+            <span className="text-sm">圓形</span>
+          </button>
+          <button 
+            onClick={() => setShape(CakeShape.RECTANGLE)}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-full relative z-10 transition-colors ${shape === CakeShape.RECTANGLE ? 'text-amber-600 font-bold' : 'text-stone-500'}`}
+          >
+            <IconSquare className="w-4 h-4" />
+            <span className="text-sm">方形</span>
+          </button>
+        </div>
+
+        {/* Slices Counter */}
+        <div className="flex items-center justify-between px-2">
+          <div className="text-stone-500 text-sm font-medium uppercase tracking-wider">人數</div>
+          
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleDecrement}
+              className="w-10 h-10 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-600 active:scale-95 transition hover:bg-stone-200"
+            >
+              <IconMinus className="w-5 h-5" />
+            </button>
+            
+            <div className="relative">
+              <input
+                type="number"
+                min="1"
+                max="64"
+                value={slices || ''} // Show empty string if 0 (cleared)
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                className="w-16 text-center text-3xl font-black text-stone-800 bg-transparent outline-none border-b-2 border-transparent focus:border-amber-500 transition-colors p-0 m-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
+
+            <button 
+              onClick={handleIncrement}
+              className="w-10 h-10 rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/30 flex items-center justify-center active:scale-95 transition hover:bg-amber-600"
+            >
+              <IconPlus className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <p className="text-white/60 text-xs font-medium drop-shadow-md pb-2">
+        請將輔助線對齊蛋糕
+      </p>
+    </div>
+  );
+};
+
+export default Controls;
