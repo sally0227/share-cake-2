@@ -95,7 +95,6 @@ const OverlayCanvas: React.FC<OverlayCanvasProps> = ({ shape, slices }) => {
         // Rectangle dimensions
         // Try to keep a 4:3 or 3:4 aspect ratio depending on orientation, but capped by screen
         const isPortrait = height > width;
-        const rectRatio = isPortrait ? 3/4 : 4/3;
         
         if (isPortrait) {
            rectW = width - (padding * 2);
@@ -161,7 +160,6 @@ const OverlayCanvas: React.FC<OverlayCanvasProps> = ({ shape, slices }) => {
            }
 
            // We want (w/c) approx equals (h/r) -> w*r = h*c -> r/c = h/w
-           const aspectRatio = h / w;
            let bestRows = 1;
            let bestCols = n;
            let minDiff = Number.MAX_VALUE;
