@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import OverlayCanvas from './components/OverlayCanvas';
 import Controls from './components/Controls';
 import { CakeShape } from './types';
